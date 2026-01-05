@@ -20,35 +20,36 @@ try {
     }
 
     // 5. Validation de l'ID
-    $category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
+    $quiz_id = filter_input(INPUT_GET, 'quiz_id', FILTER_VALIDATE_INT);
 
-    if (!$category_id) {
+    if (!$quiz_id) {
         echo json_encode(['success' => false, 'error' => 'ID invalide']);
         exit();
     }
 
     $db = Database::getInstance();
 
-    $sql = "SELECT id, titre, description
-            FROM quiz 
-            WHERE categorie_id  
-            AND is_active = 1";
+    $sql = "SELECT id, question, option1, option2, option3, option4 
+            FROM questions 
+            WHERE quiz_id ";
 
     $result = $db->query($sql);
-    $quizzes = $result->fetchAll(PDO::FETCH_ASSOC);
+    $question = $result->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
         'success' => true,
-        'data' => $quizzes
+        'data' => $question
     ], JSON_UNESCAPED_UNICODE);
+
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode([
+    echo json_encode([  
         'success' => false,
         'error' => 'Erruer serveur',
-        'message' => $e->getMessage(),
+        'message'=>$e->getMessage(),
         'file' => $e->getFile(),
         'line' => $e->getLine()
-
-    ]);
+    ], JSON_UNESCAPED_UNICODE);
+    exit();
 }
+?>
