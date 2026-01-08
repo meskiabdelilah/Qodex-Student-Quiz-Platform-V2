@@ -31,10 +31,10 @@ try {
 
     $sql = "SELECT id, titre, description
             FROM quiz 
-            WHERE categorie_id  
+            WHERE categorie_id = ? 
             AND is_active = 1";
 
-    $result = $db->query($sql);
+    $result = $db->query($sql, [$category_id]);
     $quizzes = $result->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
@@ -45,7 +45,7 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => 'Erruer serveur',
+        'error' => 'Erreur serveur',
         'message' => $e->getMessage(),
         'file' => $e->getFile(),
         'line' => $e->getLine()
